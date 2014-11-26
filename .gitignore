@@ -37,6 +37,7 @@
 *.dia~
 *.dia.autosave
 *.~ml
+ctags
 obj/
 bin/
 gen/
