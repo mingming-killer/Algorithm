@@ -1,5 +1,5 @@
 /**
- * This wandoujia 1st test. 
+ * the simple double list. 
  */
 
 #include <stdio.h>
@@ -8,6 +8,7 @@
 
 typedef struct list_t {
     struct list_t* next;
+    struct list_t* prev;
     int data; 
 } list;
 
@@ -48,6 +49,24 @@ void print_list(list* head) {
     printf("\n");
 }
 
+void rev_print_list(list* head) {
+    if (NULL == head) {
+        return;
+    }
+
+    list* tail = head;
+    while(NULL != tail && NULL != tail->next) {
+        tail = tail->next;
+    }
+
+    printf("rev list is: ");
+    while(NULL != tail) {
+        printf("%d, ", tail->data);
+        tail = tail->prev;
+    }
+    printf("\n");
+}
+
 int list_size(list* head) {
     if (NULL == head) {
         return 0;
@@ -61,7 +80,7 @@ int list_size(list* head) {
     return count;
 }
 
-void insert_node(list* head, int data) {
+list* insert_node(list* head, int data) {
     if (NULL == head) {
         return;
     }
@@ -75,10 +94,12 @@ void insert_node(list* head, int data) {
         last = last->next;
     }
     last->next = node;
+    node->prev = last;
+    return node;
 }
 
 list* get_node(list* head, int pos) {
-    if (NULL == head || pos < 0) {
+    if (NULL == head || pos < 0 ) {
         return NULL;
     }
 
@@ -94,9 +115,6 @@ list* get_node(list* head, int pos) {
 }
 
 list* rev_list(list* head, int s, int e) {
-    list* next = NULL;
-    list* pos = NULL;
-
     list* s_prev_node = get_node(head, s - 1);
     list* s_node = get_node(head, s);
     list* e_node = get_node(head, e);
@@ -106,26 +124,34 @@ list* rev_list(list* head, int s, int e) {
         return head;
     }
 
-    int i, j;
-    int c1 = e - s;
-    int c2 = c1;
-    pos = s_prev_node;
-    for (i = 0; i < c1; i++) {
-        next = s_node;
-        for (j = 0; j < c2; j++) {
-            next = next->next;
-        }
-        // the s_prev_node is NULL the s is the head.
-        if (NULL != pos) {
-            pos->next = next;
-        }
-        pos = next;
-        c2--;
-    }
-    pos->next = s_node;
-    s_node->next = e_next_node;
+    list* prev = NULL;
+    list* next = NULL;
+    list* pos = NULL;
 
-    // the s is head, the new head should be the reverse end node
+    pos = s_node;
+    prev = e_next_node;
+    next = s_node->next;
+    if (NULL != s_prev_node) {
+        s_prev_node->next = e_node;
+    } 
+
+    int i;
+    int c = e - s + 1;
+    for (i = 0; i < c; i++) {
+        pos->prev = next;
+        pos->next = prev;
+        pos = next;
+        if (NULL != pos) {
+            prev = pos->prev;
+            next = pos->next;
+        }
+    }
+
+    e_node->prev = s_prev_node;
+    if (NULL != e_next_node) {
+        e_next_node->prev = s_node;
+    }
+
     if (NULL == s_prev_node) {
         return e_node;
     } else {
@@ -136,18 +162,19 @@ list* rev_list(list* head, int s, int e) {
 int main(int argc, char** argv) {
     int i = 0;
     list* head = init_list();
-    head->next = NULL;
     head->data = 1;
 
     for (i = 1; i < 5; i++) {
         insert_node(head, i + 1);
     }
     print_list(head);
+    rev_print_list(head);
 
     head = rev_list(head, 1, 3);
     //head = rev_list(head, 0, 2);
     //head = rev_list(head, 2, 4);
     print_list(head);
+    rev_print_list(head);
 
     free_list(head);
     return 0;
