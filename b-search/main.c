@@ -1,6 +1,17 @@
 #include <stdio.h>
 
-int bsearch(int datas[], int len, int target) {
+#define LEN(array) (sizeof(array) / sizeof(array[0]))
+
+// binary search must sorted data !!
+static int s_data[] = {2, 4, 6, 8, 10, 12, 16, 18, 20, 28, 30};
+static int s_len = LEN(s_data);
+
+
+void printList(int[], int);
+int bsearch(int[], int, int);
+
+
+int bsearch(int data[], int len, int target) {
     int low = 0;
     int mid = 0;
     int high = len - 1;
@@ -8,9 +19,9 @@ int bsearch(int datas[], int len, int target) {
     while (low <= high) {
         mid = low + ((high - low) / 2);
         printf("l=%d, h=%d, m=%d \n", low, high, mid);
-        if (datas[mid] == target) {
+        if (data[mid] == target) {
             return mid;
-        } else if (datas[mid] > target) {
+        } else if (data[mid] > target) {
             high = mid - 1;
         } else {
             low = mid + 1;
@@ -20,30 +31,28 @@ int bsearch(int datas[], int len, int target) {
     return -1;
 }
 
-void print_list(int datas[], int len) {
+void printList(int data[], int len) {
     printf("list is: ");
     int i = 0;
     for (i = 0; i < len; i++) {
-        printf("%d, ", datas[i]);
+        printf("%d, ", data[i]);
     }
     printf("\n");
 }
 
 int main(int argc, char** argv) {
-    // binary search must sorted data !!
-    int datas[] = {2, 4, 6, 8, 10, 12, 16, 18, 20, 28, 30};
-    print_list(datas, 11);
-
+    printList(s_data, s_len);
+    printf("\n");
 
     int i;
     int index = -1;
     int targets[] = {10, 2, 30, 16, 28};
     for (i = 0; i < 5; i++) {
-        index = bsearch(datas, 11, targets[i]);
+        index = bsearch(s_data, s_len, targets[i]);
         printf("search %d index is  %d \n", targets[i], index);
+        printf("\n");
         index = -1;
     }
-
 
     return 0;
 }
