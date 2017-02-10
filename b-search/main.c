@@ -3,8 +3,8 @@
 #define LEN(array) (sizeof(array) / sizeof(array[0]))
 
 // binary search must sorted data !!
-static int s_data[] = {2, 4, 6, 8, 10, 12, 16, 18, 20, 28, 30};
-static int s_len = LEN(s_data);
+static int sData[] = {2, 4, 6, 8, 10, 12, 16, 18, 20, 28, 30};
+static int sLen = LEN(sData);
 
 
 void printList(int[], int);
@@ -41,14 +41,14 @@ void printList(int data[], int len) {
 }
 
 int main(int argc, char** argv) {
-    printList(s_data, s_len);
+    printList(sData, sLen);
     printf("\n");
 
     int i;
     int index = -1;
     int targets[] = {10, 2, 30, 16, 28};
     for (i = 0; i < 5; i++) {
-        index = bsearch(s_data, s_len, targets[i]);
+        index = bsearch(sData, sLen, targets[i]);
         printf("search %d index is  %d \n", targets[i], index);
         printf("\n");
         index = -1;
